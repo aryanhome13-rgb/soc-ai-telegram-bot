@@ -186,7 +186,7 @@ def cmd_log(token, chat_id, args):
 
     send_message(token, chat_id, f"Log Summary - Last {hours} Hours\n{'='*25}\n{result}")
 
-def cmd_durum(token, chat_id):
+def cmd_status(token, chat_id):
     try:
         disk = subprocess.run("df -h / | tail -1", shell=True, capture_output=True, text=True).stdout.strip()
         ram = subprocess.run("free -h | grep Mem", shell=True, capture_output=True, text=True).stdout.strip()
@@ -352,8 +352,14 @@ def cmd_analyze(token, chat_id):
     try:
         # shell=True removed, commands executed separately
         subprocess.run(["rm", "-f", "/var/lib/soc/last_run"], shell=False)
+
+        import os
+        script_path = "/usr/local/bin/soc-log-analyzer.sh"
+        if not os.path.exists(script_path):
+            script_path = "./soc-log-analyzer.sh"
+
         result = subprocess.run(
-            ["/usr/local/bin/soc-log-analyzer.sh"],
+            [script_path],
             shell=False, capture_output=True, text=True, timeout=120
         )
         output = result.stdout
