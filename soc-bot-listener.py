@@ -354,10 +354,21 @@ def cmd_analyze(token, chat_id):
         subprocess.run(["rm", "-f", "/var/lib/soc/last_run"], shell=False)
 
         import os
-        script_path = "/usr/local/bin/soc-log-analyzer.sh"
-        if not os.path.exists(script_path):
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            script_path = os.path.join(base_dir, "soc-log-analyzer.sh")
+        # Base paths to look for the script
+        possible_paths = [
+            "/usr/local/bin/soc-log-analyzer.sh",
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "soc-log-analyzer.sh"),
+            "./soc-log-analyzer.sh"
+        ]
+        
+        script_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                script_path = path
+                break
+        
+        if not script_path:
+            raise FileNotFoundError("Could not find soc-log-analyzer.sh in standard paths.")
 
         result = subprocess.run(
             [script_path],

@@ -52,7 +52,7 @@ fi
 
 # Copy files
 echo -e "[4/6] Copying SOC components to system directories..."
-sudo cp soc-*.py /usr/local/bin/
+sudo cp soc-*.py soc-*.sh /usr/local/bin/
 sudo cp soc_config.py /usr/local/bin/
 sudo cp nginx-*.sh nginx-*.py /usr/local/bin/ 2>/dev/null || true
 sudo chmod +x /usr/local/bin/soc-*
